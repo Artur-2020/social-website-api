@@ -27,7 +27,7 @@ export interface IFriends {
 }
 
 /**
- * Type for controller response
+ * Type for controller (api) response
  */
 
 export interface BasicReturnType<T> {

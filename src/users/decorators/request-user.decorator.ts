@@ -10,6 +10,6 @@ export const User = createParamDecorator(
       return null;
     }
 
-    return { id: user.userId };
+    return user;
   },
 );

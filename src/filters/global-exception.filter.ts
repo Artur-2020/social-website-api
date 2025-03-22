@@ -7,7 +7,13 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { services_controllers } from '../constants';
 
+const { somethingWentWrong } = services_controllers;
+
+/**
+ * Global error handling exception
+ */
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -25,7 +31,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const message =
       exception instanceof HttpException
         ? exception.getResponse()
-        : 'Something went wrong';
+        : somethingWentWrong;
 
     this.logger.error(
       `[${request.method}] ${request.url} - Status: ${status}`,
@@ -38,7 +44,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message:
         typeof message === 'string'
           ? message
-          : (message as any).message || 'Something went wrong',
+          : (message as any).message || somethingWentWrong,
     });
   }
 }

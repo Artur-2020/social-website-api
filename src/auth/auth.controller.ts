@@ -3,9 +3,8 @@ import { AuthService } from './auth.service';
 import { services_controllers } from '../constants';
 import modifyStringWithValues from '../helpers/modifyStringWithValues';
 import { BasicReturnType } from '../interfaces';
-import { RegisterDto, LoginDto } from './dtos';
+import { RegisterDto, LoginDto, RefreshDto } from './dtos';
 import { loginReturn, registerReturn } from './interfaces';
-import RefreshDto from './dtos/refresh.dto';
 
 const { operationSuccessfully } = services_controllers;
 @Controller('auth')

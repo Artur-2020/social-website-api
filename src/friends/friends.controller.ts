@@ -2,9 +2,9 @@ import {
   Body,
   Controller,
   Get,
-  Param, Patch,
+  Param,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import modifyStringWithValues from '../helpers/modifyStringWithValues';

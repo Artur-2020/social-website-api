@@ -12,4 +12,5 @@ export const services_controllers = {
   alreadyExistsItem: '{item} is already exists',
   operationSuccessfully: '{operation} has been made successfully',
   notFound: '{item} is not found',
+  somethingWentWrong: 'Something went wrong',
 };

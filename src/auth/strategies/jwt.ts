@@ -19,7 +19,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super(options);
   }
 
-  validate(payload: { userId }) {
+  /**
+   * Validate jwt payload and return userid for set in the req user
+   * @param payload
+   */
+
+  validate(payload: { userId: string }) {
     if (!payload?.userId) {
       throw new UnauthorizedException(
         modifyStringWithValues(invalidItem, {
@@ -27,6 +32,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         }),
       );
     }
-    return { userId: payload.userId};
+    return { id: payload.userId };
   }
 }

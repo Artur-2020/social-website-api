@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { validations } from '../../constants';
 import { passwordDoesNotMatch, passwordMsg } from '../constants';
-import { Match } from '../../users/decorators/match.decorator';
+import { Match } from '../decorators/match.decorator';
 import modifyStringWithValues from '../../helpers/modifyStringWithValues';
 
 const { notEmpty, lengthMsg, invalidItem } = validations;

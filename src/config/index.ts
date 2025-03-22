@@ -1,15 +1,16 @@
 import * as process from 'node:process';
 import modifyStringWithValues from '../helpers/modifyStringWithValues';
 
-
 const varIsNotSetInEnv = "Environment variable '{var}' is not set.";
 
+/**
+ * Throw error if some env vars is not set for not having issues with app work
+ * @param name
+ */
 function getEnvVar(name: string): string {
   const value = process.env[name];
   if (!value) {
-    throw new Error(
-      modifyStringWithValues(varIsNotSetInEnv, { var: name })
-    );
+    throw new Error(modifyStringWithValues(varIsNotSetInEnv, { var: name }));
   }
   return value;
 }
