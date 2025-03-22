@@ -20,6 +20,8 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 import { commonResponses } from '../config/swagger.config';
 
@@ -38,7 +40,11 @@ export class FriendsController {
    * @param user
    */
   @Post('/requests')
-  @ApiOperation({ summary: 'Send a friend request' })
+  @ApiOperation({
+    summary: 'Send a friend request',
+    description:
+      'Send a friend request to another user. Cannot send request to yourself or to users you are already friends with.',
+  })
   @ApiResponse({
     status: 201,
     description: 'Friend request sent successfully',
@@ -46,11 +52,40 @@ export class FriendsController {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string' },
+        message: {
+          type: 'string',
+          example: 'Request sending has been made successfully',
+        },
       },
     },
   })
-  @ApiResponse(commonResponses.badRequest)
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        statusCode: { type: 'number', example: 400 },
+        message: { type: 'string', example: 'The Receiver ID is invalid' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        statusCode: { type: 'number', example: 409 },
+        message: {
+          type: 'string',
+          example: 'Friend request is already exists',
+        },
+      },
+    },
+  })
   @ApiResponse(commonResponses.unauthorized)
   async sendFriendRequest(
     @Body() data: FriendRequestDto,
@@ -84,13 +119,16 @@ export class FriendsController {
             type: 'object',
             properties: {
               id: { type: 'string' },
-              senderId: { type: 'string' },
-              receiverId: { type: 'string' },
+              sender_id: { type: 'string' },
+              receiver_id: { type: 'string' },
               status: {
                 type: 'string',
                 enum: ['pending', 'declined', 'accepted'],
               },
-              createdAt: { type: 'string', format: 'date-time' },
+              created_at: { type: 'string', format: 'date-time' },
+              first_name: { type: 'string' },
+              last_name: { type: 'string' },
+              email: { type: 'string' },
             },
           },
         },
@@ -117,6 +155,27 @@ export class FriendsController {
    */
   @Patch('/requests/:id')
   @ApiOperation({ summary: 'Accept or decline a friend request' })
+  @ApiParam({
+    name: 'id',
+    description: 'Friend request ID',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiBody({
+    description: 'Action to perform on the friend request',
+    schema: {
+      type: 'object',
+      required: ['action'],
+      properties: {
+        action: {
+          type: 'string',
+          enum: ['accept', 'decline'],
+          example: 'accept',
+          description:
+            'Action to perform on the friend request (accept or decline)',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'Friend request updated successfully',
@@ -124,7 +183,10 @@ export class FriendsController {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string' },
+        message: {
+          type: 'string',
+          example: 'The request has been accepted successfully',
+        },
         data: { type: 'null' },
       },
     },

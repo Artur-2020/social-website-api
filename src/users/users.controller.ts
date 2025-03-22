@@ -8,6 +8,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { commonResponses } from '../config/swagger.config';
 import SearchDto from './dtos/search.dto';
@@ -24,6 +25,24 @@ export class UsersController {
    * Search users by query
    */
   @ApiOperation({ summary: 'Search users by query parameters' })
+  @ApiQuery({
+    name: 'firstName',
+    required: false,
+    description: 'Filter users by first name',
+    example: 'John',
+  })
+  @ApiQuery({
+    name: 'lastName',
+    required: false,
+    description: 'Filter users by last name',
+    example: 'Doe',
+  })
+  @ApiQuery({
+    name: 'age',
+    required: false,
+    description: 'Filter users by age',
+    example: 25,
+  })
   @ApiResponse({
     status: 200,
     description: 'Users found successfully',
