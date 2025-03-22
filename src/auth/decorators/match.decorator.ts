@@ -6,7 +6,9 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-export type objectType = Record<string, number | boolean | string | null>;
+export type objectType = {
+  [key: string]: any;
+};
 
 /**
  * Function for use in the dtos for matching two properties like password, confirm_password

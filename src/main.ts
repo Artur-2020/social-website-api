@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,8 +29,14 @@ async function bootstrap() {
     }),
   );
 
+  // Setup Swagger documentation
+  setupSwagger(app);
+
   const port = configService.get<string>('port');
   await app.listen(port ?? 3000);
   console.log(`Main application is running on port ${port}`);
+  console.log(
+    `Swagger documentation is available at http://localhost:${port}/api`,
+  );
 }
 bootstrap();

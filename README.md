@@ -66,6 +66,11 @@ npm run start:dev
 Once started, the application will be available at:
 
 ```
-http://localhost:3000
+http://localhost:<PORT>
 ```
 
+The application api documentation will be available  at:
+
+```
+http://localhost:<PORT>/api
+```

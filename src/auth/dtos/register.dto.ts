@@ -10,10 +10,17 @@ import { validations } from '../../constants';
 import { passwordDoesNotMatch, passwordMsg } from '../constants';
 import { Match } from '../decorators/match.decorator';
 import modifyStringWithValues from '../../helpers/modifyStringWithValues';
+import { ApiProperty } from '@nestjs/swagger';
 
 const { notEmpty, lengthMsg, invalidItem } = validations;
 
 export default class RegisterDto {
+  @ApiProperty({
+    description: 'User first name',
+    example: 'John',
+    minLength: 2,
+    maxLength: 30,
+  })
   @IsNotEmpty({
     message: modifyStringWithValues(notEmpty, { item: 'First Name' }),
   })
@@ -26,6 +33,12 @@ export default class RegisterDto {
   })
   firstName: string;
 
+  @ApiProperty({
+    description: 'User last name',
+    example: 'Doe',
+    minLength: 2,
+    maxLength: 30,
+  })
   @IsNotEmpty({
     message: modifyStringWithValues(notEmpty, { item: 'Last Name' }),
   })
@@ -38,6 +51,11 @@ export default class RegisterDto {
   })
   lastName: string;
 
+  @ApiProperty({
+    description: 'User email address',
+    example: 'john.doe@example.com',
+    format: 'email',
+  })
   @IsNotEmpty({ message: modifyStringWithValues(notEmpty, { item: 'Email' }) })
   @IsEmail(
     {},
@@ -45,9 +63,22 @@ export default class RegisterDto {
   )
   email: string;
 
+  @ApiProperty({
+    description: 'User age',
+    example: 25,
+    minimum: 13,
+  })
   @IsInt()
   @Min(13)
   age: number;
+
+  @ApiProperty({
+    description:
+      'User password (must contain at least one number, one letter, and one special character (!@#$%^&*))',
+    example: 'Password123!',
+    minLength: 8,
+    maxLength: 20,
+  })
   @IsNotEmpty({
     message: modifyStringWithValues(notEmpty, { item: 'Password' }),
   })
@@ -61,6 +92,12 @@ export default class RegisterDto {
   @Matches(/(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])/, { message: passwordMsg })
   password: string;
 
+  @ApiProperty({
+    description: 'Confirm password (must match password)',
+    example: 'Password123!',
+    minLength: 8,
+    maxLength: 20,
+  })
   @IsNotEmpty({
     message: modifyStringWithValues(notEmpty, { item: 'Password' }),
   })
@@ -71,8 +108,6 @@ export default class RegisterDto {
       min: 8,
     }),
   })
-
-  // @ts-ignore
   @Match('password', { message: passwordDoesNotMatch })
   confirmPassword: string;
 }

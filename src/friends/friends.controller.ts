@@ -15,8 +15,18 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { BasicReturnType, IFriendRequest, IUser } from '../interfaces';
 import { User } from '../users/decorators/request-user.decorator';
 import { requestActionSuccessfully } from './constants';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { commonResponses } from '../config/swagger.config';
+
 const { operationSuccessfully } = services_controllers;
 
+@ApiTags('Friends')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('friends')
 export class FriendsController {
@@ -28,6 +38,20 @@ export class FriendsController {
    * @param user
    */
   @Post('/requests')
+  @ApiOperation({ summary: 'Send a friend request' })
+  @ApiResponse({
+    status: 201,
+    description: 'Friend request sent successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse(commonResponses.badRequest)
+  @ApiResponse(commonResponses.unauthorized)
   async sendFriendRequest(
     @Body() data: FriendRequestDto,
     @User() user: IUser,
@@ -46,6 +70,34 @@ export class FriendsController {
    * @param user
    */
   @Get('/requests')
+  @ApiOperation({ summary: 'Get pending friend requests' })
+  @ApiResponse({
+    status: 200,
+    description: 'Friend requests retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              senderId: { type: 'string' },
+              receiverId: { type: 'string' },
+              status: {
+                type: 'string',
+                enum: ['pending', 'declined', 'accepted'],
+              },
+              createdAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse(commonResponses.unauthorized)
   async getRequestsList(
     @User() user: IUser,
   ): Promise<BasicReturnType<IFriendRequest[]>> {
@@ -64,6 +116,21 @@ export class FriendsController {
    * @param body
    */
   @Patch('/requests/:id')
+  @ApiOperation({ summary: 'Accept or decline a friend request' })
+  @ApiResponse({
+    status: 200,
+    description: 'Friend request updated successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string' },
+        data: { type: 'null' },
+      },
+    },
+  })
+  @ApiResponse(commonResponses.badRequest)
+  @ApiResponse(commonResponses.unauthorized)
   async updateRequests(
     @Param('id') id: string,
     @User() user: IUser,
