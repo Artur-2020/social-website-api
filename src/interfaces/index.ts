@@ -18,6 +18,13 @@ export interface IFriendRequest {
   receiver_id: string;
   sender_id: string;
   status: string;
+  created_at: Date;
+}
+
+export interface IFriendRequestWithSender extends IFriendRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
 export interface IFriends {

@@ -111,9 +111,6 @@ export class AuthService {
       );
     }
 
-    // Remove exists refresh token and create new
-
-    await this.tokensService.deleteRefreshToken(payload.userId);
     const tokens = this.tokensService.generateTokens(payload.userId);
     await this.tokensService.saveRefreshToken(
       payload.userId,

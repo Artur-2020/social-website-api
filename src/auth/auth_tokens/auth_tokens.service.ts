@@ -55,10 +55,13 @@ export class AuthTokensService {
 
   /**
    * Save refresh token in the db for future auth
+   * Remove old token before creating the new
    * @param userId
    * @param token
    */
   async saveRefreshToken(userId: string, token: string) {
+    // Remove exists refresh token and create new
+    await this.deleteRefreshToken(userId);
     const expiresIn = this.configService.get<string>(
       'refreshTokenExpiresIn',
     ) as string;

@@ -4,7 +4,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { FriendRequestsRepository, UserRepository, FriendsRepository } from '../repositories';
+import {
+  FriendRequestsRepository,
+  UserRepository,
+  FriendsRepository,
+} from '../repositories';
 import modifyStringWithValues from '../helpers/modifyStringWithValues';
 import { services_controllers, validations } from '../constants';
 import { IFriendRequest } from '../interfaces';
@@ -13,7 +17,7 @@ import {
   FRIEND_REQUESTS_STATUS,
   friendRequestConflict,
   invalidPendingRequest,
-  alreadyFriends as alreadyFriendsWithUser
+  alreadyFriends as alreadyFriendsWithUser,
 } from './constants';
 
 const { notFound, alreadyExistsItem } = services_controllers;
@@ -74,14 +78,13 @@ export class FriendsService {
   }
 
   /**
-   * Get user`s friend requests list
+   * Get user`s friend requests list with sender details
    * @param userId
    */
   async getRequestsList(userId: string): Promise<IFriendRequest[]> {
-    return await this.friendRequestsRepository.findByQuery({
-      status: FRIEND_REQUESTS_STATUS.PENDING,
-      receiver_id: userId,
-    });
+    return await this.friendRequestsRepository.getRequestsWithSenderDetails(
+      userId,
+    );
   }
 
   /**
@@ -176,7 +179,7 @@ export class FriendsService {
    * @param receiverId
    * @param senderId
    */
-  private async friendsOrNot (receiverId: string, senderId: string) {
+  private async friendsOrNot(receiverId: string, senderId: string) {
     return this.friendsRepository.areUsersFriends(senderId, receiverId);
   }
 }
