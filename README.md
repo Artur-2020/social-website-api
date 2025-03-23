@@ -74,3 +74,32 @@ The application api documentation will be available  at:
 ```
 http://localhost:<PORT>/api
 ```
+
+## Testing
+
+The project includes unit tests for core functionality (services). Here's how to run the tests:
+
+```bash
+# Run all tests
+npm run test
+
+
+### Test Structure
+
+The tests are organized by feature modules:
+
+- `src/auth/auth.service.spec.ts` - Tests for authentication service
+  - Login functionality
+  - Registration process
+  - Token refresh mechanism
+
+- `src/auth/auth-tokens/auth-tokens.service.spec.ts` - Tests for auth token service
+  - Generate tokens
+  - Save Refresh token
+  - Validate refresh token
+  - Delete refresh token
+
+- `src/friends/friends.service.spec.ts` - Tests for friends service
+  - Friend request sending
+  - Request management (accept/decline)
+  - Friend list retrieval

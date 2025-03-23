@@ -18,7 +18,6 @@ export interface IFriendRequest {
   receiver_id: string;
   sender_id: string;
   status: string;
-  created_at: Date;
 }
 
 export interface IFriendRequestWithSender extends IFriendRequest {

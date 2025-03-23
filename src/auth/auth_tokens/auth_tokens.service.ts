@@ -82,34 +82,38 @@ export class AuthTokensService {
    * @param refreshToken
    */
   async validateRefreshToken(refreshToken: string): Promise<jwtPayload | null> {
-    const tokens = await this.refreshTokensRepository.findByQuery({
-      token: refreshToken,
-    });
+    try {
+      const tokens = await this.refreshTokensRepository.findByQuery({
+        token: refreshToken,
+      });
 
-    if (!tokens.length) {
+      if (!tokens || !tokens.length) {
+        return null;
+      }
+
+      const refreshTokenSecret =
+        this.configService.get<string>('refreshTokenSecret');
+
+      const token = tokens[0];
+
+      // Check if token was expired
+      if (new Date(token.expires_at) < new Date()) {
+        return null;
+      }
+
+      const payload = this.jwtService.verify<jwtPayload>(refreshToken, {
+        secret: refreshTokenSecret,
+      });
+
+      // Check if the userId is invalid
+      if (payload.userId !== token.user_id) {
+        return null;
+      }
+
+      return payload;
+    } catch (e) {
       return null;
     }
-
-    const refreshTokenSecret =
-      this.configService.get<string>('refreshTokenSecret');
-
-    const token = tokens[0];
-
-    // Check if token was expired
-    if (new Date(token.expires_at) < new Date()) {
-      return null;
-    }
-
-    const payload = this.jwtService.verify<jwtPayload>(refreshToken, {
-      secret: refreshTokenSecret,
-    });
-
-    // Check if the userId is invalid
-    if (payload.userId !== token.user_id) {
-      return null;
-    }
-
-    return payload;
   }
 
   /**

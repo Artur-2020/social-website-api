@@ -197,7 +197,7 @@ export class FriendsController {
     @Param('id') id: string,
     @User() user: IUser,
     @Body() body: UpdateFriendRequestDto,
-  ): Promise<BasicReturnType<IFriendRequest | null>> {
+  ): Promise<BasicReturnType<null>> {
     const { action } = body;
     await this.friendsService.updateRequestByAction(id, user.id, action);
     return {
@@ -205,7 +205,6 @@ export class FriendsController {
         action,
       }),
       success: true,
-      data: null,
     };
   }
 }
