@@ -82,7 +82,7 @@ The project includes unit tests for core functionality (services). Here's how to
 ```bash
 # Run all tests
 npm run test
-
+```
 
 ### Test Structure
 
